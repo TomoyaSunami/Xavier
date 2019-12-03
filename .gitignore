@@ -2,10 +2,14 @@
 *.png
 *.weights
 *.data
+.DS_Store
+.python-version
 
 /output*/
 /cfg/
 /data/
 /zed-python-api
+/detected_images
 
 /__pycache__
+/xavier-env

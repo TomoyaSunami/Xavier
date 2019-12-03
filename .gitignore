@@ -1,0 +1,11 @@
+*.mp4
+*.png
+*.weights
+*.data
+
+/output*/
+/cfg/
+/data/
+/zed-python-api
+
+/__pycache__

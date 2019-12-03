@@ -333,6 +333,9 @@ def kill_iperf():
     cmd = "pkill -f iperf -2"
     subprocess.call(cmd.split())
 
+def hmm():
+    prediction = 0
+    return prediction
 
 def main(argv):
     print("allocate")

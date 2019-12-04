@@ -6,10 +6,12 @@
 .python-version
 
 /output*/
+/video/
 /cfg/
 /data/
 /zed-python-api
 /detected_images
+/.vscode
 
 /__pycache__
 /xavier-env

@@ -4,7 +4,7 @@
 *.data
 .DS_Store
 .python-version
-test*
+test_*
 *.pkl
 
 /output*/

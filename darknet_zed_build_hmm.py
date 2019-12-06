@@ -25,8 +25,6 @@ import numpy as np
 import cv2
 import pyzed.sl as sl
 import datetime
-from hmmlearn import hmm
-import joblib
 
 # Get the top-level logger object
 log = logging.getLogger(__name__)
@@ -324,44 +322,9 @@ def generate_color(meta_path):
     return color_array
 
 
-def start_iperf():
-    cmd = "iperf -s -u -i 1"
-    subprocess.call(cmd.split())
-    #subprocess.call(["iperf","-c","192.168.0.3","-u","-t","30"])
-  
-def kill_iperf():
-    cmd = "pgrep -l iperf"
-    subprocess.call(cmd.split())
-    cmd = "pkill -f iperf -2"
-    subprocess.call(cmd.split())
-
-def hmm_predict(model, X, pre_hmm_prediction):
-    if len(X) <= 1:
-        return 0
-    """
-    model = hmm.MultinomialHMM(n_components=2,n_iter=500)
-    model.fit(X)
-    """
-    
-    L,Z = model.decode(X)
-    
-    if model.emissionprob_[0,0] > model.emissionprob_[0,1] and model.emissionprob_[1,0] < model.emissionprob_[1,1]:
-        if Z[-1] == 0:
-            prediction = 0
-        else:
-            prediction = 1
-    elif model.emissionprob_[0,0] < model.emissionprob_[0,1] and model.emissionprob_[1,0] > model.emissionprob_[1,1]:
-        if Z[-1] == 0:
-            prediction = 1
-        else:
-            prediction = 0
-    else:
-        prediction = pre_hmm_prediction
-
-    return prediction
 
 def main(argv):
-    print("allocate")
+
     thresh = 0.25
     darknet_path="../libdarknet/"
     config_path = darknet_path + "cfg/yolov3-tiny.cfg"
@@ -459,22 +422,13 @@ def main(argv):
     color_array = generate_color(meta_path)
 
     log.info("Running...")
-    #save_image_num = 1
-    iperf_state = None
     
-    
-
     path = "iperf_flag.txt"
     if not os.path.isfile(path):
         print("Error: not exist the file")
         sys.exit(1)
-    
-    model = joblib.load("hmm_model.pkl")
-    prediction_list = []
-    x_list = np.empty((0,1),int)
-    pre_prediciton = 0
-    
-    key = ""
+
+    key = ''
     while key != 113:  # for 'q' key
         start_time = time.time() # start time of the loop
         err = cam.grab(runtime)
@@ -489,13 +443,12 @@ def main(argv):
             # Do the detection
             detections = detect(netMain, metaMain, image, thresh)
 
-            log.info("**** " + str(len(detections)) + " Results ****")
+            log.info(chr(27) + "[2J"+"**** " + str(len(detections)) + " Results ****")
             for detection in detections:
                 label = detection[0]
                 confidence = detection[1]
                 pstring = label+": "+str(np.rint(100 * confidence))+"%"
-
-                
+                #log.info(pstring)
                 bounds = detection[2]
                 y_extent = int(bounds[3])
                 x_extent = int(bounds[2])
@@ -518,69 +471,18 @@ def main(argv):
                 cv2.rectangle(image, (x_coord - thickness, y_coord - thickness),
                               (x_coord + x_extent + thickness, y_coord + y_extent + thickness),
                               color_array[detection[3]], int(thickness*2))
-                
-            # show and save
+
             #cv2.imshow("ZED", image)
             cv2.imwrite("output/{}.jpg".format(timestamp), image)
-
-            #save_image_num += 1
-            
-            labels = [detection[0] for detection in detections]
-
-            x = 1 if "person" in labels else 0
-            
-            if len(x_list) < 10:
-                x_list = np.append(x_list,np.array([x]),axis=0)
-            else :
-                x_list = np.roll(x_list, -1)
-                x_list[-1,0] = x[0]
-        
-            prediction = hmm_predict(model, x_list, pre_prediciton)
-            prediction_list.append(prediction)
-            pre_prediciton = prediction
-                                
-            with open(path, mode='r') as f:
-                str_r = [s.strip().split(",") for s in f.readlines()]
-                #print(str_r)
-                discription = str_r[0][:]
-                iperf_state = str_r[1][1]
-                iperf_start = str_r[1][2]
-                iperf_kill = str_r[1][3] 
-
-            #log.info("hit_count: {},  iperf_state: {},  iperf_start: {},  iperf_kill: {}".format(hit_count, iperf_state, iperf_start, iperf_kill))
-    
-            if iperf_state=="OFF" and prediction==1:
-                str_w = str_r
-    
-                with open(path, mode='w') as f:
-                    str_w[1][2] = "True"
-                    str_w = "\n".join([",".join(str_w[0][:]),",".join(str_w[1][:])])
-                    #print(str_w)
-                    f.write(str_w)
-               #print("--start iperf--")
-
-
-            elif iperf_state=="ON" and prediction==0:
-                str_w = str_r
-                with open(path, mode='w') as f:
-                    str_w[1][3] = "True"
-                    str_w = "\n".join([",".join(str_w[0][:]),",".join(str_w[1][:])])
-                    #print(str_w)
-                    f.write(str_w) 
-                #print("--kill iperf--")     
-
-
-            
-
-            #key = cv2.waitKey(15)
+            #key = cv2.waitKey(5)
             log.info("FPS: {}".format(1.0 / (time.time() - start_time)))
-            #log.info("iperf_on-off: {}".format(iperf_on_off))
-            #log.info("hit_count: {}".format(hit_count))
+            x = 1 if "person" in labels else 0
+            with open(path, mode='a') as f:
+                str_w = x
+                #print(str_w)
+                f.write(str_w)
         else:
-            key = cv2.waitKey(15)
-        log.info("\n")
-        #time.sleep(1)
-
+            key = cv2.waitKey(5)
     cv2.destroyAllWindows()
 
     cam.close()

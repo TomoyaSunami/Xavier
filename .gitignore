@@ -4,6 +4,8 @@
 *.data
 .DS_Store
 .python-version
+test*
+*.pkl
 
 /output*/
 /video/

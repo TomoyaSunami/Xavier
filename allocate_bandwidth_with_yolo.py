@@ -25,6 +25,8 @@ import numpy as np
 import cv2
 import pyzed.sl as sl
 import datetime
+from hmmlearn import hmm
+import joblib
 
 # Get the top-level logger object
 log = logging.getLogger(__name__)
@@ -333,6 +335,30 @@ def kill_iperf():
     cmd = "pkill -f iperf -2"
     subprocess.call(cmd.split())
 
+def hmm_predict(model, X, pre_hmm_prediction):
+    if len(X) <= 1:
+        return 0
+    """
+    model = hmm.MultinomialHMM(n_components=2,n_iter=500)
+    model.fit(X)
+    """
+    
+    L,Z = model.decode(X)
+    
+    if model.emissionprob_[0,0] > model.emissionprob_[0,1] and model.emissionprob_[1,0] < model.emissionprob_[1,1]:
+        if Z[-1] == 0:
+            prediction = 0
+        else:
+            prediction = 1
+    elif model.emissionprob_[0,0] < model.emissionprob_[0,1] and model.emissionprob_[1,0] > model.emissionprob_[1,1]:
+        if Z[-1] == 0:
+            prediction = 1
+        else:
+            prediction = 0
+    else:
+        prediction = pre_hmm_prediction
+
+    return prediction
 
 def main(argv):
     print("allocate")
@@ -442,7 +468,12 @@ def main(argv):
     if not os.path.isfile(path):
         print("Error: not exist the file")
         sys.exit(1)
-    count = 0
+    
+    model = joblib.load("hmm_model.pkl")
+    prediction_list = []
+    x_list = np.empty((0,1),int)
+    pre_prediciton = 0
+    
     key = ""
     while key != 113:  # for 'q' key
         start_time = time.time() # start time of the loop
@@ -473,15 +504,15 @@ def main(argv):
                 y_coord = int(bounds[1] - bounds[3]/2)
                 #boundingBox = [[x_coord, y_coord], [x_coord, y_coord + y_extent], [x_coord + x_extent, y_coord + y_extent], [x_coord + x_extent, y_coord]]
                 thickness = 1
-                x, y, z = get_object_depth(depth, bounds)
-                coordinate_string = " x:"+str(x) + " y:"+str(y) + " z:"+str(z)
+                #x, y, z = get_object_depth(depth, bounds)
+                #coordinate_string = " x:"+str(x) + " y:"+str(y) + " z:"+str(z)
                 #log.info(pstring + coordinate_string)
-                distance = math.sqrt(x * x + y * y + z * z)
-                distance = "{:.2f}".format(distance)
+                #distance = math.sqrt(x * x + y * y + z * z)
+                #distance = "{:.2f}".format(distance)
                 cv2.rectangle(image, (x_coord - thickness, y_coord - thickness),
                               (x_coord + x_extent + thickness, y_coord + (18 + thickness*4)),
                               color_array[detection[3]], -1)
-                cv2.putText(image, label + " " +  (str(distance) + " m"),
+                cv2.putText(image, pstring,
                             (x_coord + (thickness * 4), y_coord + (10 + thickness * 4)),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
                 cv2.rectangle(image, (x_coord - thickness, y_coord - thickness),
@@ -495,12 +526,18 @@ def main(argv):
             #save_image_num += 1
             
             labels = [detection[0] for detection in detections]
-            
-            if ("person" in labels) and hit_count < 15:
-                hit_count += 1
-            elif ("person" not in labels) and hit_count > 0 :
-                hit_count -= 1
 
+            x = 1 if "person" in labels else 0
+            
+            if len(x_list) < 10:
+                x_list = np.append(x_list,np.array([x]),axis=0)
+            else :
+                x_list = np.roll(x_list, -1)
+                x_list[-1,0] = x[0]
+        
+            prediction = hmm_predict(model, x_list, pre_prediciton)
+            prediction_list.append(prediction)
+            pre_prediciton = prediction
                                 
             with open(path, mode='r') as f:
                 str_r = [s.strip().split(",") for s in f.readlines()]
@@ -510,20 +547,20 @@ def main(argv):
                 iperf_start = str_r[1][2]
                 iperf_kill = str_r[1][3] 
 
-            log.info("hit_count: {},  iperf_state: {},  iperf_start: {},  iperf_kill: {}".format(hit_count, iperf_state, iperf_start, iperf_kill))
+            #log.info("hit_count: {},  iperf_state: {},  iperf_start: {},  iperf_kill: {}".format(hit_count, iperf_state, iperf_start, iperf_kill))
     
-            if iperf_state=="OFF" and hit_count >= 10:
+            if iperf_state=="OFF" and prediction==1:
                 str_w = str_r
     
                 with open(path, mode='w') as f:
                     str_w[1][2] = "True"
                     str_w = "\n".join([",".join(str_w[0][:]),",".join(str_w[1][:])])
-                    #print(str_w)  
+                    #print(str_w)
                     f.write(str_w)
                #print("--start iperf--")
 
 
-            elif iperf_state=="ON" and hit_count < 5:
+            elif iperf_state=="ON" and prediction==0:
                 str_w = str_r
                 with open(path, mode='w') as f:
                     str_w[1][3] = "True"

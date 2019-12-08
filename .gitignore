@@ -4,6 +4,7 @@
 *.data
 
 /output*/
+/video
 /cfg/
 /data/
 /zed-python-api

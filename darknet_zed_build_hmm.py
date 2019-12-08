@@ -322,20 +322,9 @@ def generate_color(meta_path):
     return color_array
 
 
-def start_iperf():
-    cmd = "iperf -s -u -i 1"
-    subprocess.call(cmd.split())
-    #subprocess.call(["iperf","-c","192.168.0.3","-u","-t","30"])
-  
-def kill_iperf():
-    cmd = "pgrep -l iperf"
-    subprocess.call(cmd.split())
-    cmd = "pkill -f iperf -2"
-    subprocess.call(cmd.split())
-
 
 def main(argv):
-    print("allocate")
+
     thresh = 0.25
     darknet_path="../libdarknet/"
     config_path = darknet_path + "cfg/yolov3-tiny.cfg"
@@ -433,17 +422,13 @@ def main(argv):
     color_array = generate_color(meta_path)
 
     log.info("Running...")
-    #save_image_num = 1
-    iperf_state = None
-    hit_count = 0
     
-
-    path = "iperf_flag.txt"
+    path = "detected_series.txt"
     if not os.path.isfile(path):
         print("Error: not exist the file")
         sys.exit(1)
-    count = 0
-    key = ""
+
+    key = ''
     while key != 113:  # for 'q' key
         start_time = time.time() # start time of the loop
         err = cam.grab(runtime)
@@ -458,13 +443,12 @@ def main(argv):
             # Do the detection
             detections = detect(netMain, metaMain, image, thresh)
 
-            log.info("**** " + str(len(detections)) + " Results ****")
+            log.info(chr(27) + "[2J"+"**** " + str(len(detections)) + " Results ****")
             for detection in detections:
                 label = detection[0]
                 confidence = detection[1]
                 pstring = label+": "+str(np.rint(100 * confidence))+"%"
-
-                
+                #log.info(pstring)
                 bounds = detection[2]
                 y_extent = int(bounds[3])
                 x_extent = int(bounds[2])
@@ -473,77 +457,34 @@ def main(argv):
                 y_coord = int(bounds[1] - bounds[3]/2)
                 #boundingBox = [[x_coord, y_coord], [x_coord, y_coord + y_extent], [x_coord + x_extent, y_coord + y_extent], [x_coord + x_extent, y_coord]]
                 thickness = 1
-                x, y, z = get_object_depth(depth, bounds)
-                coordinate_string = " x:"+str(x) + " y:"+str(y) + " z:"+str(z)
+                #x, y, z = get_object_depth(depth, bounds)
+                #coordinate_string = " x:"+str(x) + " y:"+str(y) + " z:"+str(z)
                 #log.info(pstring + coordinate_string)
-                distance = math.sqrt(x * x + y * y + z * z)
-                distance = "{:.2f}".format(distance)
+                #distance = math.sqrt(x * x + y * y + z * z)
+                #distance = "{:.2f}".format(distance)
                 cv2.rectangle(image, (x_coord - thickness, y_coord - thickness),
                               (x_coord + x_extent + thickness, y_coord + (18 + thickness*4)),
                               color_array[detection[3]], -1)
-                cv2.putText(image, label + " " +  (str(distance) + " m"),
+                cv2.putText(image, pstring,
                             (x_coord + (thickness * 4), y_coord + (10 + thickness * 4)),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
                 cv2.rectangle(image, (x_coord - thickness, y_coord - thickness),
                               (x_coord + x_extent + thickness, y_coord + y_extent + thickness),
                               color_array[detection[3]], int(thickness*2))
-                
-            # show and save
+
             #cv2.imshow("ZED", image)
             cv2.imwrite("output/{}.jpg".format(timestamp), image)
-
-            #save_image_num += 1
-            
-            labels = [detection[0] for detection in detections]
-            
-            if ("person" in labels) and hit_count < 15:
-                hit_count += 1
-            elif ("person" not in labels) and hit_count > 0 :
-                hit_count -= 1
-
-                                
-            with open(path, mode='r') as f:
-                str_r = [s.strip().split(",") for s in f.readlines()]
-                #print(str_r)
-                discription = str_r[0][:]
-                iperf_state = str_r[1][1]
-                iperf_start = str_r[1][2]
-                iperf_kill = str_r[1][3] 
-
-            log.info("hit_count: {},  iperf_state: {},  iperf_start: {},  iperf_kill: {}".format(hit_count, iperf_state, iperf_start, iperf_kill))
-    
-            if iperf_state=="OFF" and hit_count >= 10:
-                str_w = str_r
-    
-                with open(path, mode='w') as f:
-                    str_w[1][2] = "True"
-                    str_w = "\n".join([",".join(str_w[0][:]),",".join(str_w[1][:])])
-                    #print(str_w)  
-                    f.write(str_w)
-               #print("--start iperf--")
-
-
-            elif iperf_state=="ON" and hit_count < 5:
-                str_w = str_r
-                with open(path, mode='w') as f:
-                    str_w[1][3] = "True"
-                    str_w = "\n".join([",".join(str_w[0][:]),",".join(str_w[1][:])])
-                    #print(str_w)
-                    f.write(str_w) 
-                #print("--kill iperf--")     
-
-
-            count +=1
-
-            #key = cv2.waitKey(15)
+            #key = cv2.waitKey(5)
             log.info("FPS: {}".format(1.0 / (time.time() - start_time)))
-            #log.info("iperf_on-off: {}".format(iperf_on_off))
-            #log.info("hit_count: {}".format(hit_count))
+            # save is in person
+            labels = [detection[0] for detection in detections]
+            x = 1 if "person" in labels else 0
+            with open(path, mode='a') as f:
+                str_w = str(x) + "\n"
+                #print(str_w)
+                f.write(str_w)
         else:
-            key = cv2.waitKey(15)
-        log.info("\n")
-        #time.sleep(1)
-
+            key = cv2.waitKey(5)
     cv2.destroyAllWindows()
 
     cam.close()

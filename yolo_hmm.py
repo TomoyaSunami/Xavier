@@ -469,6 +469,7 @@ def main(argv):
     x_list = np.empty((0,1),int)
     pre_prediciton = 0
     detect_path = "test_detected_series.txt"
+    prediction_path = "test-prediction_series.txt"
     
     key = ""
     while key != 113:  # for 'q' key
@@ -540,6 +541,9 @@ def main(argv):
             prediction = hmm_predict(model, x_list, pre_prediciton)
             prediction_list.append(prediction)
             pre_prediciton = prediction
+            with open(prediction_path, mode='a') as f:
+                str_w = str(prediction) + "\n"
+                f.write(str_w)
                                 
             with open(path, mode='r') as f:
                 str_r = [s.strip().split(",") for s in f.readlines()]

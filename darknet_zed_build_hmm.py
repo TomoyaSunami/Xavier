@@ -423,7 +423,10 @@ def main(argv):
 
     log.info("Running...")
     
-    path = "iperf_flag.txt"
+
+
+    path = "detected_series.txt"
+
     if not os.path.isfile(path):
         print("Error: not exist the file")
         sys.exit(1)
@@ -472,13 +475,17 @@ def main(argv):
                               (x_coord + x_extent + thickness, y_coord + y_extent + thickness),
                               color_array[detection[3]], int(thickness*2))
 
-            #cv2.imshow("ZED", image)
+
+            cv2.imshow("ZED", image)
             cv2.imwrite("output/{}.jpg".format(timestamp), image)
             #key = cv2.waitKey(5)
             log.info("FPS: {}".format(1.0 / (time.time() - start_time)))
+            # save is in person
+            labels = [detection[0] for detection in detections]
             x = 1 if "person" in labels else 0
             with open(path, mode='a') as f:
-                str_w = x
+                str_w = str(x) + "\n"
+
                 #print(str_w)
                 f.write(str_w)
         else:

@@ -1,8 +1,8 @@
 
 """
-yoloの結果を読み込みhmmを構築する
 
-構築したhmmをテストする
+load the result of object detection and build hmm
+
 
 """
 
@@ -73,18 +73,17 @@ def plot_graph(X1, X2, X3,Y1, X4):
 def main():
 
 
-    #学習データの読み込み
-    train_binary_series = load_binary_series("test_detection_binary.txt")
-    #モデル構築
+
+    
+    train_binary_series = load_binary_series("train_detected_series.txt")
     model = hmm.MultinomialHMM(n_components=2,n_iter=500)
-    #モデル学習
+    
     model.fit(train_binary_series)
-    #モデル保存
     joblib.dump(model, "HMM.pkl")
 
-    #テストデータ作成
+    
     test_binary_series, y = generate_binary_series()
-    #モデル読み込み
+
     model = joblib.load('HMM.pkl')
     
     train_L,train_prediction = model.decode(train_binary_series)
@@ -92,7 +91,9 @@ def main():
 
     plot_graph(train_binary_series, train_prediction, test_binary_series, y, prediction)
 
+    
 
 
 if __name__ == "__main__":
     main()
+

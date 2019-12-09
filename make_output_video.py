@@ -9,6 +9,7 @@ import getopt
 import numpy as np
 import cv2
 import datetime
+from tqdm import tqdm
 
 def execute_cmdline(argv):
 
@@ -72,7 +73,7 @@ def write_video(fps, images_folder_path, video_name):
     fourcc = cv2.VideoWriter_fourcc("m","p","4","v")
     video = cv2.VideoWriter(os.path.join("video",video_name), fourcc, fps, (w,h))
     
-    for i in range(img_list_size):
+    for i in tqdm(range(img_list_size)):
         idx = np.abs(np.asarray(img_times) - time_list[i]).argmin() # serch the value in the list
         time_diff[i] = img_times[idx] - time_list[i]
         img = cv2.imread(os.path.join(images_folder_path, str(img_times[idx])+".jpg"))
@@ -81,13 +82,13 @@ def write_video(fps, images_folder_path, video_name):
 
     video.release()
     
-    save_discription(fps,fps_avg, img_times, time_list, time_diff)
+    save_discription(video_name,fps,fps_avg, img_times, time_list, time_diff)
 
 
-def save_discription(fps, fps_avg, img_times, time_list, time_diff):
+def save_discription(video_name, fps, fps_avg, img_times, time_list, time_diff):
     # save the discription of the video as text file
 
-    path_w = "video/video_discription.txt"
+    path_w = "video/{}_discription.txt".format(video_name)
     img_dt = [datetime.datetime.fromtimestamp(n) for n in img_times]
     dt_format = [str(dt.year)+"/"+str(dt.month)+"/"+str(dt.day)+" "+str(dt.hour)+":"+str(dt.minute)+":"+str(dt.second)+"."+str(dt.microsecond) for dt in img_dt]
     l = ["target_fps : " + str(fps),  "fps_avg : " + str(fps_avg), "count_images : " + str(len(time_list)), "image_times : ", str(dt_format), "image_unix_times : " , str(time_list), "time_difference : " , str(time_diff)]

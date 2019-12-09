@@ -472,7 +472,7 @@ def main(argv):
                               (x_coord + x_extent + thickness, y_coord + y_extent + thickness),
                               color_array[detection[3]], int(thickness*2))
 
-            #cv2.imshow("ZED", image)
+            cv2.imshow("ZED", image)
             cv2.imwrite("output/{}.jpg".format(timestamp), image)
             #key = cv2.waitKey(5)
             log.info("FPS: {}".format(1.0 / (time.time() - start_time)))

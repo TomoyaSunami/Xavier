@@ -425,7 +425,7 @@ def main(argv):
     
 
 
-    path = "detected_series.txt"
+    path = "train_detected_series.txt"
 
     if not os.path.isfile(path):
         print("Error: not exist the file")

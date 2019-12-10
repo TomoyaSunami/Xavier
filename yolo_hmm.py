@@ -469,7 +469,7 @@ def main(argv):
     x_list = np.empty((0,1),int)
     pre_prediciton = 0
     detect_path = "test_detected_series.txt"
-    prediction_path = "test-prediction_series.txt"
+    prediction_path = "test_prediction_series.txt"
     
     key = ""
     while key != 113:  # for 'q' key

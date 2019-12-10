@@ -38,7 +38,7 @@ def generate_binary_series(seed=0, p0=0.1,p1=0.9):
 
     return X,Y
 
-def plot_graph(X1, X2, X3,Y1, X4):
+def plot_graph(X1, X2, X3, X4):
     plt.subplot(4,1,1)
     plt.subplots_adjust(hspace=2)
     plt.plot(X1)
@@ -56,7 +56,6 @@ def plot_graph(X1, X2, X3,Y1, X4):
     plt.subplot(4,1,3)
     plt.subplots_adjust(hspace=2)
     plt.plot(X3)
-    plt.plot(Y1,linestyle='dashed')
     plt.title("test_binary data")
     plt.xlabel('Trial')
     plt.yticks((0,1))
@@ -82,14 +81,14 @@ def main():
     joblib.dump(model, "HMM.pkl")
 
     
-    test_binary_series, y = generate_binary_series()
+    test_binary_series = load_binary_series("test_detected_series.txt")
 
     model = joblib.load('HMM.pkl')
     
     train_L,train_prediction = model.decode(train_binary_series)
     L,prediction = model.decode(test_binary_series)
 
-    plot_graph(train_binary_series, train_prediction, test_binary_series, y, prediction)
+    plot_graph(train_binary_series, train_prediction, test_binary_series, prediction)
 
     
 

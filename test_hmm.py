@@ -38,31 +38,38 @@ def generate_binary_series(seed=0, p0=0.1,p1=0.9):
 
     return X,Y
 
-def plot_graph(X1, X2, X3, X4):
-    plt.subplot(4,1,1)
+def plot_graph(X1, X2, X3, X4, X5):
+    plt.subplot(5,1,1)
     plt.subplots_adjust(hspace=2)
     plt.plot(X1)
     plt.title("train_binary data")
     plt.xlabel('Trial')
     plt.yticks((0,1))
     
-    plt.subplot(4,1,2)
+    plt.subplot(5,1,2)
     plt.subplots_adjust(hspace=2)
     plt.plot(X2)
     plt.title("train estimated state")
     plt.xlabel('Trial')
     plt.yticks((0,1))
 
-    plt.subplot(4,1,3)
+    plt.subplot(5,1,3)
     plt.subplots_adjust(hspace=2)
     plt.plot(X3)
     plt.title("test_binary data")
     plt.xlabel('Trial')
     plt.yticks((0,1))
     
-    plt.subplot(4,1,4)
+    plt.subplot(5,1,4)
     plt.subplots_adjust(hspace=2)
     plt.plot(X4)
+    plt.title("test estimated state")
+    plt.xlabel('Trial')
+    plt.yticks((0,1))
+
+    plt.subplot(5,1,5)
+    plt.subplots_adjust(hspace=2)
+    plt.plot(X5)
     plt.title("test estimated state")
     plt.xlabel('Trial')
     plt.yticks((0,1))
@@ -70,9 +77,6 @@ def plot_graph(X1, X2, X3, X4):
     plt.show()
 
 def main():
-
-
-
     
     train_binary_series = load_binary_series("train_detected_series.txt")
     model = hmm.MultinomialHMM(n_components=2,n_iter=10000)
@@ -88,7 +92,9 @@ def main():
     train_L,train_prediction = model.decode(train_binary_series)
     L,prediction = model.decode(test_binary_series)
 
-    plot_graph(train_binary_series, train_prediction, test_binary_series, prediction)
+    prediction_list = load_binary_series("test_prediction_series.txt")
+
+    plot_graph(train_binary_series, train_prediction, test_binary_series, prediction, prediction_list)
 
     
 

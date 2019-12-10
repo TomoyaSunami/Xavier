@@ -19,7 +19,7 @@ def execute_cmdline(argv):
 
     fps = 10
     input_path = "detected_images"
-    output_name = "video.mp4"
+    output_name = "video"
 
     help_str = 'make_output_video.py -f <fps> -i <input_path> -o <output_name>'
     try:
@@ -79,7 +79,7 @@ def write_video(fps, images_folder_path, video_name):
 
 
     fourcc = cv2.VideoWriter_fourcc("m","p","4","v")
-    video = cv2.VideoWriter(os.path.join("video",video_name), fourcc, fps, (w,h))
+    video = cv2.VideoWriter(os.path.join("video",video_name+".mp4"), fourcc, fps, (w,h))
     
 
     for i in tqdm(range(img_list_size)):

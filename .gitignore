@@ -8,13 +8,13 @@ test_*
 
 
 /output*/
-
-/video
+/image*/
+/video/
 /cfg/
 /data/
 /zed-python-api
 /detected_images
-/.vscode
 
 /__pycache__
 /xavier-env
+/.vscode

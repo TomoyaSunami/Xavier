@@ -359,8 +359,8 @@ def main(argv):
     print("allocate")
     thresh = 0.25
     darknet_path="../libdarknet/"
-    config_path = darknet_path + "cfg/yolov3-tiny.cfg"
-    weight_path = "yolov3-tiny.weights"
+    config_path = darknet_path + "cfg/yolov3.cfg"
+    weight_path = "yolov3.weights"
     meta_path = "coco.data"
     svo_path = None
     zed_id = 0

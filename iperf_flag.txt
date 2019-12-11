@@ -1,2 +1,4 @@
 ip_adress,iperf_state,start,kill
-192.168.0.3,OFF,True,False
+192.168.0.3,OFF,False,False
+192.168.0.3,OFF,False,False
+192.168.0.3,OFF,False,False

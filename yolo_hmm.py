@@ -545,37 +545,42 @@ def main(argv):
                 str_w = str(prediction) + "\n"
                 f.write(str_w)
                                 
+            avg_prediction = int(sum(x_list)/len(x_list) + 0.5)
+
             with open(path, mode='r') as f:
                 str_r = [s.strip().split(",") for s in f.readlines()]
                 #print(str_r)
-                discription = str_r[0][:]
-                iperf_state = str_r[1][1]
-                iperf_start = str_r[1][2]
-                iperf_kill = str_r[1][3] 
+            str_w = str_r
+            discription = str_r[0][:]
+            iperf_state = str_r[1][1]
+            iperf_start = str_r[1][2]
+            iperf_kill = str_r[1][3] 
 
             log.info("x: {},  prediction: {},  iperf_state: {},  iperf_start: {},  iperf_kill: {}".format(x, prediction, iperf_state, iperf_start, iperf_kill))
     
-            if iperf_state=="OFF" and prediction==1:
-                str_w = str_r
     
-                with open(path, mode='w') as f:
-                    str_w[1][2] = "True"
-                    str_w = "\n".join([",".join(str_w[0][:]),",".join(str_w[1][:])])
-                    #print(str_w)
-                    f.write(str_w)
-               #print("--start iperf--")
-
-
+            #naive
+            if str_r[1][1]=="OFF" and x[0]==1:
+                str_w[1][2] = "True"
+            elif str_r[1][1]=="ON" and x[0]==0:
+                str_w[1][3] = "True"
+                
+            #hmm
+            if iperf_state=="OFF" and prediction==1: 
+                str_w[2][2] = "True"              
             elif iperf_state=="ON" and prediction==0:
-                str_w = str_r
-                with open(path, mode='w') as f:
-                    str_w[1][3] = "True"
-                    str_w = "\n".join([",".join(str_w[0][:]),",".join(str_w[1][:])])
-                    #print(str_w)
-                    f.write(str_w) 
-                #print("--kill iperf--")     
+                str_w[2][3] = "True"
 
+            #avg
+            if iperf_state=="OFF" and avg_prediction==1: 
+                str_w[3][2] = "True"              
+            elif iperf_state=="ON" and avg_prediction==0:
+                str_w[3][3] = "True"
 
+            with open(path, mode='w') as f:
+                str_w = "\n".join([",".join(str_w[0][:]),",".join(str_w[1][:]),",".join(str_w[2][:]),",".join(str_w[3][:])])
+                
+                f.write(str_w)    
             
 
             #key = cv2.waitKey(15)

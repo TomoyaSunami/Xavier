@@ -470,6 +470,7 @@ def main(argv):
     pre_prediciton = 0
     detect_path = "test_detected_series.txt"
     prediction_path = "test_prediction_series.txt"
+    avg_prediction_path = "avg_prediction_series.txt"
     
     key = ""
     while key != 113:  # for 'q' key
@@ -546,6 +547,9 @@ def main(argv):
                 f.write(str_w)
                                 
             avg_prediction = int(sum(x_list)/len(x_list) + 0.5)
+            with open(avg_prediction_path, mode='a') as f:
+                str_w = str(avg_prediction) + "\n"
+                f.write(str_w)
 
             log.info("open file")
             with open(path, mode='r') as f:

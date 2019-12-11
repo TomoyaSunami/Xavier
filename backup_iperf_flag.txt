@@ -1,4 +1,4 @@
 ip,state,start,kill
-192,OFF,True,False
+192,OFF,False,False
 192,OFF,False,False
 192,OFF,False,False

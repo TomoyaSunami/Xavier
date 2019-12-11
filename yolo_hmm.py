@@ -549,15 +549,18 @@ def main(argv):
 
             with open(path, mode='r') as f:
                 str_r = [s.strip().split(",") for s in f.readlines()]
-                #print(str_r)
-            str_w = str_r
-            discription = str_r[0][:]
-            iperf_state = str_r[1][1]
-            iperf_start = str_r[1][2]
-            iperf_kill = str_r[1][3] 
+                print(str_r)
+                str_w = str_r
+            #discription = str_r[0][:]
+            #iperf_state = str_r[1][1]
+            #iperf_start = str_r[1][2]
+            #iperf_kill = str_r[1][3] 
 
-            log.info("x: {},  prediction: {},  iperf_state: {},  iperf_start: {},  iperf_kill: {}".format(x, prediction, iperf_state, iperf_start, iperf_kill))
-    
+            #log.info("x: {},  prediction: {},  iperf_state: {},  iperf_start: {},  iperf_kill: {}".format(x, prediction, iperf_state, iperf_start, iperf_kill))
+            log.info("x: {}, hmm: {}, avg: {}".format(x, prediction, avg_prediction))
+            for i in range(1,4):
+                log.info(i)
+                log.info("iperf_state: {}, iperf_start: {}, iperf_kill: {}".format(str_r[i][1], str_r[i][2], str_r[i][3]))
     
             #naive
             if str_r[1][1]=="OFF" and x[0]==1:
@@ -590,7 +593,7 @@ def main(argv):
         else:
             key = cv2.waitKey(15)
         log.info("\n")
-        #time.sleep(1)
+        time.sleep(1)
 
     cv2.destroyAllWindows()
 

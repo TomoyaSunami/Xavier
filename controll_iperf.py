@@ -27,29 +27,31 @@ class IPERF:
 """
 
 def naive_start_iperf():
-
     port = 5002
-    cmd = "iperf -c 192.168.0.3 -u -t 60" + " -p " + str(self.port)
+    cmd = "iperf -c 192.168.0.3 -u -t 60" + " -p " + str(port)
     proc = subprocess.Popen(cmd.split(" "))
     chi_pid = proc.pid
+    print("naive pid".format(chi_pid))
     path = "naive_iperf_pid.txt"
     with open(path, 'w') as f:
         f.write(str(chi_pid))
 
 def hmm_start_iperf():
     port = 5003
-    cmd = "iperf -c 192.168.0.3 -u -t 60" + " -p " + str(self.port)
+    cmd = "iperf -c 192.168.0.3 -u -t 60" + " -p " + str(port)
     proc = subprocess.Popen(cmd.split(" "))
     chi_pid = proc.pid
+    print("hmm pid".format(chi_pid))
     path = "hmm_iperf_pid.txt"
     with open(path, 'w') as f:
         f.write(str(chi_pid))
 
 def avg_start_iperf():
     port = 5004
-    cmd = "iperf -c 192.168.0.3 -u -t 60" + " -p " + str(self.port)
+    cmd = "iperf -c 192.168.0.3 -u -t 60" + " -p " + str(port)
     proc = subprocess.Popen(cmd.split(" "))
     chi_pid = proc.pid
+    print("avg pid".format(chi_pid))
     path = "avg_iperf_pid.txt"
     with open(path, 'w') as f:
         f.write(str(chi_pid))        
@@ -59,7 +61,7 @@ def kill_iperf(pid):
     proc = subprocess.Popen(cmd.split(" "))
 
 def main():
-    print("controll")
+    print("controll_iperf.py is loaded")
     path = "iperf_flag.txt"
     
 
@@ -72,12 +74,14 @@ def main():
     executor = concurrent.futures.ProcessPoolExecutor(max_workers=cores*5)
 
     while(1):
-
+        sleep(1)
+        print("open txt file")
         with open(path, mode='r') as f:
             str_r = [s.strip().split(",") for s in f.readlines()]
 
+            print(str_r)
             str_w = str_r
-
+        print("close txt file")
         for i in range(1,4):
             if str_r[i][1]=="OFF" and str_r[i][2]=="True":
                 if i == 1 :
@@ -100,10 +104,12 @@ def main():
                 kill_iperf(pid)
                 str_w[i][1] = "OFF"
                 str_w[i][3] = "False"
+        print("open txt")
         with open(path, mode='w') as f:
             str_w = "\n".join([",".join(str_w[0][:]),",".join(str_w[1][:]),",".join(str_w[2][:]),",".join(str_w[3][:])])
+            print(str_w)
             f.write(str_w)
-    
+        print("close txt")
     
 if  __name__=="__main__":
     main()

@@ -359,8 +359,8 @@ def main(argv):
     print("allocate")
     thresh = 0.25
     darknet_path="../libdarknet/"
-    config_path = darknet_path + "cfg/yolov3.cfg"
-    weight_path = "yolov3.weights"
+    config_path = darknet_path + "cfg/yolov3-tiny.cfg"
+    weight_path = "yolov3-tiny.weights"
     meta_path = "coco.data"
     svo_path = None
     zed_id = 0
@@ -547,10 +547,12 @@ def main(argv):
                                 
             avg_prediction = int(sum(x_list)/len(x_list) + 0.5)
 
+            log.info("open file")
             with open(path, mode='r') as f:
                 str_r = [s.strip().split(",") for s in f.readlines()]
                 print(str_r)
                 str_w = str_r
+            log.info("close file")
             #discription = str_r[0][:]
             #iperf_state = str_r[1][1]
             #iperf_start = str_r[1][2]
@@ -569,15 +571,15 @@ def main(argv):
                 str_w[1][3] = "True"
                 
             #hmm
-            if iperf_state=="OFF" and prediction==1: 
+            if str_r[2][1]=="OFF" and prediction==1: 
                 str_w[2][2] = "True"              
-            elif iperf_state=="ON" and prediction==0:
+            elif str_r[2][1]=="ON" and prediction==0:
                 str_w[2][3] = "True"
 
             #avg
-            if iperf_state=="OFF" and avg_prediction==1: 
+            if str_r[3][1]=="OFF" and avg_prediction==1: 
                 str_w[3][2] = "True"              
-            elif iperf_state=="ON" and avg_prediction==0:
+            elif str_r[3][1]=="ON" and avg_prediction==0:
                 str_w[3][3] = "True"
 
             with open(path, mode='w') as f:

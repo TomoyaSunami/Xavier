@@ -356,7 +356,7 @@ def hmm_predict(model, X, pre_hmm_prediction):
     return prediction
 
 def main(argv):
-    print("allocate")
+    print("yolo_hmm.py is loaded")
     thresh = 0.25
     darknet_path="../libdarknet/"
     config_path = darknet_path + "cfg/yolov3-tiny.cfg"
@@ -518,7 +518,7 @@ def main(argv):
                               color_array[detection[3]], int(thickness*2))
                 
             # show and save
-            #cv2.imshow("ZED", image)
+            cv2.imshow("ZED", image)
             cv2.imwrite("output/{}.jpg".format(timestamp), image)
 
             #save_image_num += 1
@@ -551,12 +551,12 @@ def main(argv):
                 str_w = str(avg_prediction) + "\n"
                 f.write(str_w)
 
-            log.info("open file")
+            
             with open(path, mode='r') as f:
                 str_r = [s.strip().split(",") for s in f.readlines()]
-                print(str_r)
+                
                 str_w = str_r
-            log.info("close file")
+            
             #discription = str_r[0][:]
             #iperf_state = str_r[1][1]
             #iperf_start = str_r[1][2]
@@ -590,16 +590,18 @@ def main(argv):
                 str_w = "\n".join([",".join(str_w[0][:]),",".join(str_w[1][:]),",".join(str_w[2][:]),",".join(str_w[3][:])])
                 
                 f.write(str_w)    
+             
             
-
-            #key = cv2.waitKey(15)
+            key = cv2.waitKey(1)
             log.info("FPS: {}".format(1.0 / (time.time() - start_time)))
             #log.info("iperf_on-off: {}".format(iperf_on_off))
             #log.info("hit_count: {}".format(hit_count))
         else:
             key = cv2.waitKey(15)
         log.info("\n")
-        time.sleep(1)
+        #time.sleep(0.2)
+        
+
 
     cv2.destroyAllWindows()
 

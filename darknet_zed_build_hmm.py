@@ -478,7 +478,7 @@ def main(argv):
 
             cv2.imshow("ZED", image)
             cv2.imwrite("output/{}.jpg".format(timestamp), image)
-            #key = cv2.waitKey(5)
+            key = cv2.waitKey(1)
             log.info("FPS: {}".format(1.0 / (time.time() - start_time)))
             # save is in person
             labels = [detection[0] for detection in detections]

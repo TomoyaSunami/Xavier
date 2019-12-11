@@ -1,5 +1,3 @@
-
-
 """
 generate video made of object detection images 
 
@@ -75,17 +73,23 @@ def write_video(fps, images_folder_path, video_name):
     time_list = [img_times[0]+n/fps for n in range(img_list_size)]
     time_diff = [0] * len(time_list)
 
+    img_dt = [datetime.datetime.fromtimestamp(n) for n in img_times]
+    dt_format = [str(dt.year)+"/"+str(dt.month)+"/"+str(dt.day)+" "+str(dt.hour)+":"+str(dt.minute)+":"+str(dt.second)+"."+str(dt.microsecond) for dt in img_dt]
+
     os.makedirs("video", exist_ok=True)
 
 
     fourcc = cv2.VideoWriter_fourcc("m","p","4","v")
     video = cv2.VideoWriter(os.path.join("video",video_name+".mp4"), fourcc, fps, (w,h))
-    
+    font = cv2.FONT_HERSHEY_SIMPLEX
 
     for i in tqdm(range(img_list_size)):
         idx = np.abs(np.asarray(img_times) - time_list[i]).argmin() # serch the value in the list
         time_diff[i] = img_times[idx] - time_list[i]
         img = cv2.imread(os.path.join(images_folder_path, str(img_times[idx])+".jpg"))
+        cv2.putText(img,"{}".format(dt_format[idx]),(920,710), font, 0.75,(0,0,0),5,cv2.LINE_AA)
+        #cv2.putText(img,"{}".format(dt_format[idx]),(920,710), font, 0.75,(118,185,0),2,cv2.LINE_AA)
+        cv2.putText(img,"{}".format(dt_format[idx]),(920,710), font, 0.75,(255,255,255),2,cv2.LINE_AA)
 
         video.write(img)
         

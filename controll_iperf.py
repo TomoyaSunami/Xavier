@@ -28,7 +28,7 @@ class IPERF:
 
 def naive_start_iperf():
     port = 5002
-    cmd = "iperf -c 192.168.0.3 -u -t 60" + " -p " + str(port)
+    cmd = "iperf -c 192.168.0.3 -u -t 60 -b 10M" + " -p " + str(port)
     proc = subprocess.Popen(cmd.split(" "))
     chi_pid = proc.pid
     print("naive pid".format(chi_pid))
@@ -38,7 +38,7 @@ def naive_start_iperf():
 
 def hmm_start_iperf():
     port = 5003
-    cmd = "iperf -c 192.168.0.3 -u -t 60" + " -p " + str(port)
+    cmd = "iperf -c 192.168.0.3 -u -t 60 -b 10M" + " -p " + str(port)
     proc = subprocess.Popen(cmd.split(" "))
     chi_pid = proc.pid
     print("hmm pid".format(chi_pid))
@@ -48,7 +48,7 @@ def hmm_start_iperf():
 
 def avg_start_iperf():
     port = 5004
-    cmd = "iperf -c 192.168.0.3 -u -t 60" + " -p " + str(port)
+    cmd = "iperf -c 192.168.0.3 -u -t 60 -b 10M" + " -p " + str(port)
     proc = subprocess.Popen(cmd.split(" "))
     chi_pid = proc.pid
     print("avg pid".format(chi_pid))

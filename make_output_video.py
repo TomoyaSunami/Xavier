@@ -15,7 +15,7 @@ from tqdm import tqdm
 
 def execute_cmdline(argv):
 
-    fps = 10
+    fps = 20
     input_path = "detected_images"
     output_name = "video"
 
@@ -87,9 +87,9 @@ def write_video(fps, images_folder_path, video_name):
         idx = np.abs(np.asarray(img_times) - time_list[i]).argmin() # serch the value in the list
         time_diff[i] = img_times[idx] - time_list[i]
         img = cv2.imread(os.path.join(images_folder_path, str(img_times[idx])+".jpg"))
-        cv2.putText(img,"{}".format(dt_format[idx]),(920,710), font, 0.75,(0,0,0),5,cv2.LINE_AA)
+        cv2.putText(img,"{}".format(dt_format[idx]),(900,700), font, 0.75,(0,0,0),5,cv2.LINE_AA)
         #cv2.putText(img,"{}".format(dt_format[idx]),(920,710), font, 0.75,(118,185,0),2,cv2.LINE_AA)
-        cv2.putText(img,"{}".format(dt_format[idx]),(920,710), font, 0.75,(255,255,255),2,cv2.LINE_AA)
+        cv2.putText(img,"{}".format(dt_format[idx]),(900,700), font, 0.75,(255,255,255),2,cv2.LINE_AA)
 
         video.write(img)
         

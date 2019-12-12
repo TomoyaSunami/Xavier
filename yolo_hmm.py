@@ -464,7 +464,7 @@ def main(argv):
         print("Error: not exist the file")
         sys.exit(1)
     
-    model = joblib.load("HMM.pkl")
+    model = joblib.load("HMM_easy.pkl")
     prediction_list = []
     x_list = np.empty((0,1),int)
     pre_prediciton = 0

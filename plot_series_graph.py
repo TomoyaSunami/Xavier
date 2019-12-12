@@ -23,7 +23,6 @@ def plot_graph(X):
 def main(argv):
 
     fps = 10
-    input_path = "detected_images"
 
 
     help_str = 'plot_serie_graph.py -i <input_path> '

@@ -54,21 +54,21 @@ def plot_graph(X1, X2, X3, X4, X5):
     plt.yticks((0,1))
 
     plt.subplot(5,1,3)
-    plt.subplots_adjust(hspace=2)
+    plt.subplots_adjust(hspace=3)
     plt.plot(X3)
     plt.title("test_binary data")
     plt.xlabel('Trial')
     plt.yticks((0,1))
     
     plt.subplot(5,1,4)
-    plt.subplots_adjust(hspace=2)
+    plt.subplots_adjust(hspace=3)
     plt.plot(X4)
-    plt.title("test estimated state")
+    plt.title("simulated estimated state")
     plt.xlabel('Trial')
     plt.yticks((0,1))
 
     plt.subplot(5,1,5)
-    plt.subplots_adjust(hspace=2)
+    plt.subplots_adjust(hspace=3)
     plt.plot(X5)
     plt.title("test estimated state")
     plt.xlabel('Trial')
@@ -82,7 +82,7 @@ def main():
     model = hmm.MultinomialHMM(n_components=2,n_iter=10000)
     
     model.fit(train_binary_series)
-    joblib.dump(model, "HMM.pkl")
+    #joblib.dump(model, "HMM.pkl")
 
     
     test_binary_series = load_binary_series("test_detected_series.txt")

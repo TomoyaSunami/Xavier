@@ -26,17 +26,15 @@ def main(argv):
     input_path = "detected_images"
 
 
-    help_str = 'make_output_video.py -f <fps> -i <input_path> '
+    help_str = 'plot_serie_graph.py -i <input_path> '
     try:
-        opts, args = getopt.getopt(argv, 'f:i:o:', ['fps=', 'input='])
+        opts, args = getopt.getopt(argv, 'i:', ['input='])
     except getopt.GetoptError as err:
         print(str(err))
         print(help_str)
         sys.exit(1)
     for opt,arg in opts:
-        if opt in ("-f", "--fps"):
-            fps = float(arg)
-        elif opt in ("-i", "--input"):
+        if opt in ("-i", "--input"):
             input_path = arg
 
 

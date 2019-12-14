@@ -83,7 +83,9 @@ def main():
     
     model.fit(train_binary_series)
     #joblib.dump(model, "HMM.pkl")
-
+    L, Z = model.decode(train_binary_series)
+    plt.plot(Z)
+    plt.show()
     
     test_binary_series = load_binary_series("test_detected_series.txt")
 

@@ -7,11 +7,11 @@ import subprocess
 
 def yolo():
     cmd = "python3 yolo.py"
-    subprocess.submit(cmd.split(" "))
+    subprocess.call(cmd.split(" "))
 
 def communication_control():
     cmd = "python3 communication_control.py"
-    subprocess.submit(cmd.split(" "))
+    subprocess.call(cmd.split(" "))
 
 def main():
     executor = concurrent.futures.ProcessPoolExecutor(max_workers=2)

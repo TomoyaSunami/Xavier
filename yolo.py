@@ -349,8 +349,8 @@ def plot_bounding_box(image, detections, color_array, depth):
         cv2.rectangle(image, (x_coord - thickness, y_coord - thickness),
                         (x_coord + x_extent + thickness, y_coord + y_extent + thickness),
                         color_array[detection[3]], int(thickness*2))
-
-    cv2.imshow("ZED", image)
+    return image
+    
 
 def execute_cmdline(argv):
 
@@ -466,6 +466,7 @@ def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
         if err == sl.ERROR_CODE.SUCCESS:
             cam.retrieve_image(mat, sl.VIEW.VIEW_LEFT)
             image = mat.get_data()
+            timestamp = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).timestamp()
 
             cam.retrieve_measure(
                 point_cloud_mat, sl.MEASURE.MEASURE_XYZRGBA)
@@ -476,7 +477,6 @@ def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
 
             log.info(chr(27) + "[2J"+"**** " + str(len(detections)) + " Results ****")
             
-            #plot_bounding_box(image, detections, color_array, depth)
             
             labels = [detection[0] for detection in detections]
             x = 1 if "person" in labels else 0
@@ -486,6 +486,10 @@ def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
             with open("output_sequence.txt", mode='a') as f:
                 str_w = str(x) + "\n"
                 f.write(str_w)
+
+            image = plot_bounding_box(image, detections, color_array, depth)
+            cv2.imshow("ZED", image)
+            cv2.imwrite("output/{}.jpg".format(timestamp), image)
 
             key = cv2.waitKey(5)
             log.info("FPS: {}".format(1.0 / (time.time() - start_time)))

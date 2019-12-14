@@ -56,15 +56,11 @@ def write_video(fps, images_folder_path, video_name):
 
     images_count = len(img_times)  
     
-    
     time = float(img_times[-1]) - float(img_times[0])
     
-
     fps_avg = images_count / time
-
+    
     img_list_size = int(time * fps)
-    
-    
     
     base_image = cv2.imread(os.path.join(images_folder_path, str(img_times[0])+".jpg"))
     h, w, c = base_image.shape
@@ -88,7 +84,6 @@ def write_video(fps, images_folder_path, video_name):
         time_diff[i] = img_times[idx] - time_list[i]
         img = cv2.imread(os.path.join(images_folder_path, str(img_times[idx])+".jpg"))
         cv2.putText(img,"{}".format(dt_format[idx]),(900,700), font, 0.75,(0,0,0),5,cv2.LINE_AA)
-        #cv2.putText(img,"{}".format(dt_format[idx]),(920,710), font, 0.75,(118,185,0),2,cv2.LINE_AA)
         cv2.putText(img,"{}".format(dt_format[idx]),(900,700), font, 0.75,(255,255,255),2,cv2.LINE_AA)
 
         video.write(img)

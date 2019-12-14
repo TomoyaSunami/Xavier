@@ -16,7 +16,7 @@ class IPERF:
         self.bandwidth = " -b " + bandwidth
     def start(self):
         if self.state == "OFF":
-            cmd = "iperf -s" + self.port
+            cmd = "iperf" + self.ip + self.port
             proc = subprocess.Popen(cmd.split(" "))
             chi_pid = proc.pid
             print("proc pid: {}".format(chi_pid))
@@ -70,7 +70,7 @@ def save_sequence(x, hmm_estimation, mode_estimation):
     with open("decoded_state_sequence.txt", mode='a') as f:
         str_w = str(hmm_estimation) + "\n"
         f.write(str_w)
-    with open("mode_observed_sequence.txt", mnode='a') as f:
+    with open("mode_observed_sequence.txt", mode='a') as f:
         str_w = str(mode_estimation) + "\n"
         f.write(str_w)
 
@@ -81,22 +81,22 @@ def main():
     model = joblib.load("HMM_easy.pkl")
     hmm_estimation = 0
 
-    iperf1_base = IPERF("192.168.0.1")
+    iperf1_base = IPERF("192.168.0.3")
     iperf1_base.set_port(5002)
     
-    iperf1 = IPERF("192.168.0.1")
+    iperf1 = IPERF("192.168.0.3")
     iperf1.set_port(5002)
     iperf1.set_bandwidth("10M")
 
-    iperf2_base = IPERF("192.168.0.1")
+    iperf2_base = IPERF("192.168.0.3")
     iperf2_base.set_port(5002)
-    iperf2 = IPERF("192.168.0.1")
+    iperf2 = IPERF("192.168.0.3")
     iperf2.set_port(5003)
     iperf2.set_bandwidth("10M")
 
-    iperf3_base = IPERF("192.168.0.1")
+    iperf3_base = IPERF("192.168.0.3")
     iperf3_base.set_port(5002)
-    iperf3 = IPERF("192.168.0.1")
+    iperf3 = IPERF("192.168.0.3")
     iperf3.set_port(5004)
     iperf3.set_bandwidth("10M")
 

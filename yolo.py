@@ -453,9 +453,9 @@ def loaunch_yolo_env(config_path, weight_path, meta_path, thresh, svo_path, zed_
 
     color_array = generate_color(meta_path)
 
-    main(cam, runtime, mat, point_cloud_mat, color_array)
+    main(cam, runtime, mat, point_cloud_mat, thresh, color_array)
 
-def main(cam, runtime, mat, point_cloud_mat, color_array):
+def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
 
     log.info("Running...")
 

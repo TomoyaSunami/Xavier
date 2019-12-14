@@ -24,6 +24,7 @@ from ctypes import *
 import numpy as np
 import cv2
 import pyzed.sl as sl
+import datetime
 
 # Get the top-level logger object
 log = logging.getLogger(__name__)

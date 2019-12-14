@@ -16,7 +16,7 @@ class IPERF:
         self.bandwidth = " -b " + bandwidth
     def start(self):
         if self.state == "OFF":
-            cmd = "iperf" + self.ip + self.port
+            cmd = "iperf " + self.ip + self.port
             proc = subprocess.Popen(cmd.split(" "))
             chi_pid = proc.pid
             print("proc pid: {}".format(chi_pid))

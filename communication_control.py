@@ -1,4 +1,4 @@
-
+import time
 import numpy as np
 import joblib
 import subprocess
@@ -16,7 +16,7 @@ class IPERF:
         self.bandwidth = " -b " + bandwidth
     def start(self):
         if self.state == "OFF":
-            cmd = "iperf -c " + self.ip + self.port
+            cmd = "iperf -u -t 60 -c " + self.ip + self.port
             proc = subprocess.Popen(cmd.split(" "))
             chi_pid = proc.pid
             print("proc pid: {}".format(chi_pid))
@@ -25,15 +25,17 @@ class IPERF:
     def kill(self):
         if self.state == "ON":
             print("target pid: {}".format(self.pid))
-            cmd = "kill " + str(self.pid)
+            cmd = "kill -9 " + str(self.pid)
             proc = subprocess.Popen(cmd.split(" "))
             self.state = "OFF"
 
 
 def load(path):
-    with open(path, 'r') as f:
-        x = int(f.read())
-    return x
+    x = ''
+    while x == '':
+        with open(path, 'r') as f:
+            x = f.read()
+    return int(x)
 
 def stock(x_array, x, window_size):
     length = len(x_array)   
@@ -78,36 +80,40 @@ def main():
     x_array1 = np.empty([1,0],int)
     x_array2 = np.empty([1,0])
 
-    model = joblib.load("HMM_easy.pkl")
+    model = joblib.load("HMM_1215.pkl")
     hmm_estimation = 0
 
-    iperf1_base = IPERF("192.168.0.3")
-    iperf1_base.set_port(5002)
-    
+    #iperf1_base = IPERF("192.168.0.3")
+    #iperf1_base.set_port(5002)
+    #iperf1_base.set_bandwidth("1")
     iperf1 = IPERF("192.168.0.3")
     iperf1.set_port(5002)
     iperf1.set_bandwidth("10M")
 
-    iperf2_base = IPERF("192.168.0.3")
-    iperf2_base.set_port(5002)
+    #iperf2_base = IPERF("192.168.0.3")
+    #iperf2_base.set_port(5003)
+    #iperf2_base.set_bandwidth("1")
     iperf2 = IPERF("192.168.0.3")
     iperf2.set_port(5003)
     iperf2.set_bandwidth("10M")
 
-    iperf3_base = IPERF("192.168.0.3")
-    iperf3_base.set_port(5002)
+    #iperf3_base = IPERF("192.168.0.3")
+    #iperf3_base.set_port(5004)
+    #iperf3_base.set_bandwidth("1")
     iperf3 = IPERF("192.168.0.3")
     iperf3.set_port(5004)
     iperf3.set_bandwidth("10M")
-
-    iperf1_base.start()
-    iperf2_base.start()
-    iperf3_base.start()
-
+    
+    #iperf1_base.start()
+    #iperf2_base.start()
+    #iperf3_base.start()
+    
+    time.sleep(1)
+    print("-------\n\n\nrunning\n\n\n------")
     while True:
         x = load("is_there_person.txt")
         x_array1 = stock(x_array1, x, 10)
-        x_array2 = stock(x_array2, x, 5)
+        x_array2 = stock(x_array2, x, 10)
 
         hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
         mode_estimation = mode_estimate(x_array2)
@@ -118,19 +124,20 @@ def main():
             iperf1.kill()
 
         
-        if mode_estimation == 1:
-            iperf3.start()
-        else :
-            iperf3.kill()
-
-        
         if hmm_estimation == 1:
             iperf2.start()
         else :
             iperf2.kill()
 
-        save_sequence(x, hmm_estimation, mode_estimation)
+        
+        if mode_estimation == 1:
+            iperf3.start()
+        else :
+            iperf3.kill()
 
+        save_sequence(x, hmm_estimation, mode_estimation)
+        with open("is_there_person.txt",'w') as f:
+            f.write("")
         
 
 if  __name__=="__main__":

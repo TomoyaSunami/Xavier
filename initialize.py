@@ -5,6 +5,12 @@ def main():
     print(cmd)
     subprocess.call(cmd.split(" "))
 
+    with open("is_there_person.txt", mode='w') as f:
+        str_w = ""
+        f.write(str_w)
+    with open("output_sequence.txt", mode='w') as f:
+        str_w = ""
+        f.write(str_w)
     with open("observed_sequence.txt", mode='w') as f:
         str_w = ""
         f.write(str_w)
@@ -14,7 +20,7 @@ def main():
     with open("mode_observed_sequence.txt", mode='w') as f:
         str_w = ""
         f.write(str_w)
-    print("clean observed_sequence.txt, decoded_state_sequence.txt, mode_observed_sequence.txt")
+    print("clean is_there_person.txt, output_sequence.txt observed_sequence.txt, decoded_state_sequence.txt, mode_observed_sequence.txt")
 
     cmd = "cp backup_iperf_flag.txt iperf_flag.txt"
     print(cmd)

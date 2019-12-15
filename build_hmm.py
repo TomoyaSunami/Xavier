@@ -61,7 +61,7 @@ def plot_graph(X1, X2):
 
 def main():
     
-    output_sequence = load_sequence("observed_sequence.txt")
+    output_sequence = load_sequence("output_sequence.txt")
     model = hmm.MultinomialHMM(n_components=2,n_iter=10000)
     
     model.fit(output_sequence.reshape(len(output_sequence),1))
@@ -71,7 +71,7 @@ def main():
     hmm_estimation = 0
     estimated_state = []
     for x in output_sequence:
-        x_array = stock(x_array, x, 4)
+        x_array = stock(x_array, x, 10)
         
 
         hmm_estimation = hmm_estimate(model, x_array, hmm_estimation)

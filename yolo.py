@@ -25,6 +25,7 @@ import numpy as np
 import cv2
 import pyzed.sl as sl
 import datetime
+import time
 
 # Get the top-level logger object
 log = logging.getLogger(__name__)
@@ -338,13 +339,13 @@ def plot_bounding_box(image, detections, color_array, depth):
         thickness = 1
         x, y, z = get_object_depth(depth, bounds)
         coordinate_string = " x:"+str(x) + " y:"+str(y) + " z:"+str(z)
-        log.info(pstring + coordinate_string)
-        distance = math.sqrt(x * x + y * y + z * z)
-        distance = "{:.2f}".format(distance)
+        #log.info(pstring + coordinate_string)
+        #distance = math.sqrt(x * x + y * y + z * z)
+        #distance = "{:.2f}".format(distance)
         cv2.rectangle(image, (x_coord - thickness, y_coord - thickness),
                         (x_coord + x_extent + thickness, y_coord + (18 + thickness*4)),
                         color_array[detection[3]], -1)
-        cv2.putText(image, label + " " +  (str(distance) + " m"),
+        cv2.putText(image, pstring,
                     (x_coord + (thickness * 4), y_coord + (10 + thickness * 4)),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         cv2.rectangle(image, (x_coord - thickness, y_coord - thickness),
@@ -457,7 +458,6 @@ def loaunch_yolo_env(config_path, weight_path, meta_path, thresh, svo_path, zed_
     main(cam, runtime, mat, point_cloud_mat, thresh, color_array)
 
 def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
-
     log.info("Running...")
 
     key = ''
@@ -503,4 +503,5 @@ def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
 
 
 if __name__ == "__main__":
+    time.sleep(2)
     execute_cmdline(sys.argv[1:])

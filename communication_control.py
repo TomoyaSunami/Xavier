@@ -2,6 +2,10 @@ import time
 import numpy as np
 import joblib
 import subprocess
+import logging
+
+log = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 class IPERF:
     def __init__(self,ip):
@@ -112,7 +116,7 @@ def main():
     iperf3_base.start()
     
     time.sleep(1)
-    print("-------\n\n\nrunning\n\n\n------")
+    log.info("-------\n\n\nrunning\n\n\n------")
     key = ""
     while key!=113:
         x = load("is_there_person.txt")
@@ -145,7 +149,9 @@ def main():
         key = cv2.waitKey(5)
     
     iperf3_base.kill()
-    iperf3.kill()    
+    iperf3.kill()
+    log.info("\nfinish")
+
 
 if  __name__=="__main__":
     main()

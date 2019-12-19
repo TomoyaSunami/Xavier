@@ -3,7 +3,7 @@ import numpy as np
 import joblib
 import subprocess
 import logging
-import cv2
+
 
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -120,34 +120,38 @@ def main():
     log.info("-------\n\n\nrunning\n\n\n------")
     key = ""
     while key!=113:
-        x = load("is_there_person.txt")
-        x_array1 = stock(x_array1, x, 10)
-        x_array2 = stock(x_array2, x, 10)
+        try:
+            x = load("is_there_person.txt")
+            x_array1 = stock(x_array1, x, 10)
+            x_array2 = stock(x_array2, x, 10)
 
-        hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
-        mode_estimation = mode_estimate(x_array2)
-        """
-        if x == 1:
-            iperf1.start()
-        else :
-            iperf1.kill()
-        """
-        """"
-        if hmm_estimation == 1:
-            iperf2.start()
-        else :
-            iperf2.kill()
-        """
+            hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
+            mode_estimation = mode_estimate(x_array2)
+            """
+            if x == 1:
+                iperf1.start()
+            else :
+                iperf1.kill()
+            """
+            """"
+            if hmm_estimation == 1:
+                iperf2.start()
+            else :
+                iperf2.kill()
+            """
+            
+            if mode_estimation == 1:
+                iperf3.start()
+            else :
+                iperf3.kill()
         
-        if mode_estimation == 1:
-            iperf3.start()
-        else :
-            iperf3.kill()
+            #save_sequence(x, hmm_estimation, mode_estimation)
+            with open("is_there_person.txt",'w') as f:
+                f.write("")
+        except KeyboardInterrupt:
+            log.info("Keybord Interrupt")
+            break
         
-        #save_sequence(x, hmm_estimation, mode_estimation)
-        with open("is_there_person.txt",'w') as f:
-            f.write("")
-        key = cv2.waitKey(5)
     
     iperf3_base.kill()
     iperf3.kill()

@@ -1,9 +1,9 @@
 import subprocess
 
 def main():
-    cmd = "rm output/*"
-    print(cmd)
-    subprocess.call(cmd.split(" "))
+    target_dir = "output"
+    shutil.rmtree(target_dir)
+    os.mkdir(target_dir)
 
     with open("is_there_person.txt", mode='w') as f:
         str_w = ""

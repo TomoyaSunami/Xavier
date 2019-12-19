@@ -3,6 +3,7 @@ import numpy as np
 import joblib
 import subprocess
 import logging
+import cv2
 
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)

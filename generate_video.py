@@ -16,7 +16,7 @@ from tqdm import tqdm
 def execute_cmdline(argv):
 
     fps = 20
-    input_path = "detected_images"
+    input_path = "output"
     output_name = "video"
 
     help_str = 'make_output_video.py -f <fps> -i <input_path> -o <output_name>'

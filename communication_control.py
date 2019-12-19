@@ -10,25 +10,28 @@ class IPERF:
         self.bandwidth = ""
         self.pid = None
         self.state = "OFF"
+        self.proc = None
     def set_port(self,port):
         self.port = " -p " + str(port)
     def set_bandwidth(self,bandwidth):
         self.bandwidth = " -b " + bandwidth
     def start(self):
         if self.state == "OFF":
-            cmd = "iperf -u -t 60 -c " + self.ip + self.port
+            cmd = "iperf -u -t 60 -c " + self.ip + self.port + self.bandwidth
             proc = subprocess.Popen(cmd.split(" "))
             chi_pid = proc.pid
             print("proc pid: {}".format(chi_pid))
             self.pid = chi_pid
             self.state = "ON"
+            self.proc = proc
     def kill(self):
         if self.state == "ON":
-            print("target pid: {}".format(self.pid))
-            cmd = "kill -9 " + str(self.pid)
-            proc = subprocess.Popen(cmd.split(" "))
+            #print("target pid: {}".format(self.pid))
+            #cmd = "kill -9 " + str(self.pid)
+            #proc = subprocess.Popen(cmd.split(" "))
+            self.proc.kill()
             self.state = "OFF"
-
+            
 
 def load(path):
     x = ''
@@ -82,7 +85,7 @@ def main():
 
     model = joblib.load("HMM_1215.pkl")
     hmm_estimation = 0
-
+    """
     #iperf1_base = IPERF("192.168.0.3")
     #iperf1_base.set_port(5002)
     #iperf1_base.set_bandwidth("1")
@@ -96,17 +99,17 @@ def main():
     iperf2 = IPERF("192.168.0.3")
     iperf2.set_port(5003)
     iperf2.set_bandwidth("10M")
-
-    #iperf3_base = IPERF("192.168.0.3")
-    #iperf3_base.set_port(5004)
-    #iperf3_base.set_bandwidth("1")
+    """
+    iperf3_base = IPERF("192.168.0.3")
+    iperf3_base.set_port(5004)
+    iperf3_base.set_bandwidth("1")
     iperf3 = IPERF("192.168.0.3")
     iperf3.set_port(5004)
     iperf3.set_bandwidth("10M")
     
     #iperf1_base.start()
     #iperf2_base.start()
-    #iperf3_base.start()
+    iperf3_base.start()
     
     time.sleep(1)
     print("-------\n\n\nrunning\n\n\n------")
@@ -117,27 +120,28 @@ def main():
 
         hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
         mode_estimation = mode_estimate(x_array2)
-        
+        """
         if x == 1:
             iperf1.start()
         else :
             iperf1.kill()
-
-        
+        """
+        """"
         if hmm_estimation == 1:
             iperf2.start()
         else :
             iperf2.kill()
-
+        """
         
         if mode_estimation == 1:
             iperf3.start()
         else :
             iperf3.kill()
-
-        save_sequence(x, hmm_estimation, mode_estimation)
+        
+        #save_sequence(x, hmm_estimation, mode_estimation)
         with open("is_there_person.txt",'w') as f:
             f.write("")
+    iperf3_base.kill()
         
 
 if  __name__=="__main__":

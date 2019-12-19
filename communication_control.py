@@ -113,7 +113,8 @@ def main():
     
     time.sleep(1)
     print("-------\n\n\nrunning\n\n\n------")
-    while True:
+    key = ""
+    while key!=113:
         x = load("is_there_person.txt")
         x_array1 = stock(x_array1, x, 10)
         x_array2 = stock(x_array2, x, 10)
@@ -141,8 +142,10 @@ def main():
         #save_sequence(x, hmm_estimation, mode_estimation)
         with open("is_there_person.txt",'w') as f:
             f.write("")
+        key = cv2.waitKey(5)
+    
     iperf3_base.kill()
-        
+    iperf3.kill()    
 
 if  __name__=="__main__":
     main()

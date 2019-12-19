@@ -1,9 +1,11 @@
-import subprocess
+import os
+import shutil
 
 def main():
     target_dir = "output"
     shutil.rmtree(target_dir)
     os.mkdir(target_dir)
+    print("clean output directory")
 
     with open("is_there_person.txt", mode='w') as f:
         str_w = ""
@@ -22,9 +24,6 @@ def main():
         f.write(str_w)
     print("clean is_there_person.txt, output_sequence.txt observed_sequence.txt, decoded_state_sequence.txt, mode_observed_sequence.txt")
 
-    cmd = "cp backup_iperf_flag.txt iperf_flag.txt"
-    print(cmd)
-    subprocess.call(cmd.split(" "))
 
 if __name__=="__main__":
     main()

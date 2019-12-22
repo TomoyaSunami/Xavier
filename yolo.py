@@ -476,7 +476,7 @@ def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
             # Do the detection
             detections = detect(netMain, metaMain, image, thresh)
 
-            log.info(chr(27) + "[2J"+"**** " + str(len(detections)) + " Results ****")
+            #log.info(chr(27) + "[2J"+"**** " + str(len(detections)) + " Results ****")
             
             """
             labels = [detection[0] for detection in detections]
@@ -490,7 +490,6 @@ def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
             """
 
             confidence_list = [detection[1] for detection in detections if detection[0] == "person"]            
-            print(confidence_list)
             confidence = confidence_list[0] if len(confidence_list)!=0 else 0
             with open("confidence_person.txt", mode='w') as f:
                 str_w = str(confidence) + "\n"
@@ -504,7 +503,7 @@ def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
             cv2.imwrite("output/{}.jpg".format(timestamp), image)
 
             key = cv2.waitKey(5)
-            log.info("FPS: {}".format(1.0 / (time.time() - start_time)))
+            #log.info("FPS: {}".format(1.0 / (time.time() - start_time)))
         else:
             key = cv2.waitKey(5)
     cv2.destroyAllWindows()

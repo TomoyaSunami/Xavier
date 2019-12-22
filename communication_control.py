@@ -111,14 +111,15 @@ def main():
     iperf3_base = IPERF("192.168.0.3")
     iperf3_base.set_port(5004)
     iperf3_base.set_bandwidth("1")
+    """
     iperf3 = IPERF("192.168.0.3")
     iperf3.set_port(5004)
     iperf3.set_bandwidth("10M")
     
     #iperf1_base.start()
     #iperf2_base.start()
-    iperf3_base.start()
-    """
+    #iperf3_base.start()
+    
     time.sleep(2)
     log.info("-------\n\n\nrunning\n\n\n------")
     #iperf3_base.kill()
@@ -129,8 +130,8 @@ def main():
         x = load("confidence_person.txt")
         x_array1 = stock(x_array1, x, 10)
         x_array2 = stock(x_array2, x, 5)
-        log.info(x)
-        hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
+        log.info("x:{}".format(x))
+        #hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
         avg_estimation = avg_estimate(x_array2,0.1)
         """
         if x == 1:
@@ -144,13 +145,13 @@ def main():
         else :
             iperf2.kill()
         """
-        """
+        
         if avg_estimation == 1:
             iperf3.start()
         else :
             iperf3.kill()
-        """
-        print(avg_estimation)
+        
+        log.info("avg:{}".format(avg_estimation))
         save_sequence(x, avg_estimation)
         
         with open("confidence_person.txt",'w') as f:

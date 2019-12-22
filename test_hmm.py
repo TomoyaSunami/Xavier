@@ -82,12 +82,6 @@ def main():
     model = hmm.MultinomialHMM(n_components=2,n_iter=10000)
     
     model.fit(train_binary_series)
-<<<<<<< HEAD
-    #joblib.dump(model, "HMM.pkl")
-    L, Z = model.decode(train_binary_series)
-    plt.plot(Z)
-    plt.show()
-=======
     L,Z = model.decode(train_binary_series)
     fig = plt.figure()
     ax = plt.axes()
@@ -99,7 +93,6 @@ def main():
     print("finish")
     joblib.dump(model, "HMM.pkl")
 
->>>>>>> 7afdd1bfcb51749d1c60ff7738cb1b9c25261ec3
     
     test_binary_series = load_binary_series("test_detected_series.txt")
 

@@ -74,13 +74,15 @@ def hmm_estimate(model, observed_sequence, pre_estimation):
 def avg_estimate(x_array,thresh):
     return 1 if np.average(x_array)>thresh else 0
 
-def save_sequence(x, hmm_estimation, avg_estimation):
+def save_sequence(x, avg_estimation):
     with open("observed_sequence.txt", mode='a') as f:
         str_w = str(x) + "\n"
         f.write(str_w)
+    """
     with open("decoded_state_sequence.txt", mode='a') as f:
         str_w = str(hmm_estimation) + "\n"
         f.write(str_w)
+    """
     with open("mode_observed_sequence.txt", mode='a') as f:
         str_w = str(avg_estimation) + "\n"
         f.write(str_w)
@@ -148,7 +150,7 @@ def main():
             else :
                 iperf3.kill()
         
-            #save_sequence(x, hmm_estimation, avg_estimation)
+            save_sequence(x, hmm_estimation, avg_estimation)
             with open("confidence_person.txt",'w') as f:
                 f.write("")
         except KeyboardInterrupt:

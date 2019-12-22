@@ -478,10 +478,20 @@ def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
 
             log.info(chr(27) + "[2J"+"**** " + str(len(detections)) + " Results ****")
             
-            
+            """
             labels = [detection[0] for detection in detections]
             x = 1 if "person" in labels else 0
             with open("is_there_person.txt", mode='w') as f:
+                str_w = str(x) + "\n"
+                f.write(str_w)
+            with open("output_sequence.txt", mode='a') as f:
+                str_w = str(x) + "\n"
+                f.write(str_w)
+            """
+
+            confidence_list = [detection[1] for ditection in detections if detection[0] == "person"]            
+            confidence = confidence_list[0]
+            with open("confidence_person.txt", mode='w') as f:
                 str_w = str(x) + "\n"
                 f.write(str_w)
             with open("output_sequence.txt", mode='a') as f:

@@ -44,7 +44,7 @@ def load(path):
     while x == '':
         with open(path, 'r') as f:
             x = f.read()
-    return int(x)
+    return float(x)
 
 def stock(x_array, x, window_size):
     length = len(x_array)   
@@ -122,40 +122,44 @@ def main():
     time.sleep(2)
     log.info("-------\n\n\nrunning\n\n\n------")
     #iperf3_base.kill()
-    time.sleep(20)
+    #time.sleep(20)
     key = 113
-    while key!=113:
-        try:
-            x = load("confidence_person.txt")
-            x_array1 = stock(x_array1, x, 10)
-            x_array2 = stock(x_array2, x, 5)
+    while True:
+        log.info("OK")
+        #try:
+        x = load("confidence_person.txt")
+        x_array1 = stock(x_array1, x, 10)
+        x_array2 = stock(x_array2, x, 5)
 
-            hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
-            avg_estimation = avg_estimate(x_array2,0.1)
-            """
-            if x == 1:
-                iperf1.start()
-            else :
-                iperf1.kill()
-            """
-            """"
-            if hmm_estimation == 1:
-                iperf2.start()
-            else :
-                iperf2.kill()
-            """
-            
-            if avg_estimation == 1:
-                iperf3.start()
-            else :
-                iperf3.kill()
-        
-            save_sequence(x, avg_estimation)
-            with open("confidence_person.txt",'w') as f:
-                f.write("")
+        hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
+        avg_estimation = avg_estimate(x_array2,0.1)
+        """
+        if x == 1:
+            iperf1.start()
+        else :
+            iperf1.kill()
+        """
+        """"
+        if hmm_estimation == 1:
+            iperf2.start()
+        else :
+            iperf2.kill()
+        """
+        """
+        if avg_estimation == 1:
+            iperf3.start()
+        else :
+            iperf3.kill()
+    
+        save_sequence(x, avg_estimation)
+        """
+        with open("confidence_person.txt",'w') as f:
+            f.write("")
+        """
         except KeyboardInterrupt:
             log.info("Keybord Interrupt")
             break
+        """
         
     
     iperf3_base.kill()

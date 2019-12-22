@@ -71,10 +71,10 @@ def hmm_estimate(model, observed_sequence, pre_estimation):
 
     return estimation
 
-def mode_estimate(x_array):
-    return int(sum(x_array)/len(x_array) + 0.5)
+def avg_estimate(x_array,thresh):
+    return 1 if np.average(x_array)>thresh else 0:
 
-def save_sequence(x, hmm_estimation, mode_estimation):
+def save_sequence(x, hmm_estimation, avg_estimation):
     with open("observed_sequence.txt", mode='a') as f:
         str_w = str(x) + "\n"
         f.write(str_w)
@@ -82,7 +82,7 @@ def save_sequence(x, hmm_estimation, mode_estimation):
         str_w = str(hmm_estimation) + "\n"
         f.write(str_w)
     with open("mode_observed_sequence.txt", mode='a') as f:
-        str_w = str(mode_estimation) + "\n"
+        str_w = str(avg_estimation) + "\n"
         f.write(str_w)
 
 def main():
@@ -124,12 +124,12 @@ def main():
     key = 113
     while key!=113:
         try:
-            x = load("is_there_person.txt")
+            x = load("confidence_person.txt")
             x_array1 = stock(x_array1, x, 10)
-            x_array2 = stock(x_array2, x, 10)
+            x_array2 = stock(x_array2, x, 5)
 
             hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
-            mode_estimation = mode_estimate(x_array2)
+            avg_estimation = avg_estimate(x_array2,0.1)
             """
             if x == 1:
                 iperf1.start()
@@ -143,13 +143,13 @@ def main():
                 iperf2.kill()
             """
             
-            if mode_estimation == 1:
+            if avg_estimation == 1:
                 iperf3.start()
             else :
                 iperf3.kill()
         
-            #save_sequence(x, hmm_estimation, mode_estimation)
-            with open("is_there_person.txt",'w') as f:
+            #save_sequence(x, hmm_estimation, avg_estimation)
+            with open("confidence_person.txt",'w') as f:
                 f.write("")
         except KeyboardInterrupt:
             log.info("Keybord Interrupt")

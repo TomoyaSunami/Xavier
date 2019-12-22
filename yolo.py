@@ -514,5 +514,4 @@ def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
 
 
 if __name__ == "__main__":
-    time.sleep(2)
     execute_cmdline(sys.argv[1:])

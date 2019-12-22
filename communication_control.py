@@ -35,6 +35,7 @@ class IPERF:
             #cmd = "kill -9 " + str(self.pid)
             #proc = subprocess.Popen(cmd.split(" "))
             self.proc.kill()
+            
             self.state = "OFF"
             
 
@@ -116,9 +117,11 @@ def main():
     #iperf2_base.start()
     iperf3_base.start()
     
-    time.sleep(1)
+    time.sleep(2)
     log.info("-------\n\n\nrunning\n\n\n------")
-    key = ""
+    #iperf3_base.kill()
+    time.sleep(20)
+    key = 113
     while key!=113:
         try:
             x = load("is_there_person.txt")

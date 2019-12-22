@@ -4,6 +4,7 @@
 #import communication_control
 import concurrent.futures
 import subprocess
+import time
 
 def yolo():
     cmd = "python3 yolo.py"
@@ -16,6 +17,7 @@ def communication_control():
 def main():
     executor = concurrent.futures.ProcessPoolExecutor(max_workers=2)
     executor.submit(yolo)
+    time.sleep(3)
     executor.submit(communication_control)
     
 

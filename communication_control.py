@@ -72,7 +72,7 @@ def hmm_estimate(model, observed_sequence, pre_estimation):
     return estimation
 
 def avg_estimate(x_array,thresh):
-    return 1 if np.average(x_array)>thresh else 0:
+    return 1 if np.average(x_array)>thresh else 0
 
 def save_sequence(x, hmm_estimation, avg_estimation):
     with open("observed_sequence.txt", mode='a') as f:

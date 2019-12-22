@@ -491,6 +491,7 @@ def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
 
             confidence_list = [detection[1] for detection in detections if detection[0] == "person"]            
             confidence = confidence_list[0] if len(confidence_list)!=0 else 0
+            confidence = int(confidence*100)
             with open("confidence_person.txt", mode='w') as f:
                 str_w = str(confidence) + "\n"
                 f.write(str_w)

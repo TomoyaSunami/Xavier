@@ -107,7 +107,7 @@ def main():
     iperf2 = IPERF("192.168.0.3")
     iperf2.set_port(5003)
     iperf2.set_bandwidth("10M")
-    """
+    
     iperf3_base = IPERF("192.168.0.3")
     iperf3_base.set_port(5004)
     iperf3_base.set_bandwidth("1")
@@ -118,19 +118,18 @@ def main():
     #iperf1_base.start()
     #iperf2_base.start()
     iperf3_base.start()
-    
+    """
     time.sleep(2)
     log.info("-------\n\n\nrunning\n\n\n------")
     #iperf3_base.kill()
     #time.sleep(20)
-    key = 113
+    
     while True:
-        log.info("OK")
-        #try:
+        
         x = load("confidence_person.txt")
         x_array1 = stock(x_array1, x, 10)
         x_array2 = stock(x_array2, x, 5)
-
+        log.info(x)
         hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
         avg_estimation = avg_estimate(x_array2,0.1)
         """
@@ -150,20 +149,18 @@ def main():
             iperf3.start()
         else :
             iperf3.kill()
-    
-        save_sequence(x, avg_estimation)
         """
+        print(avg_estimation)
+        save_sequence(x, avg_estimation)
+        
         with open("confidence_person.txt",'w') as f:
             f.write("")
-        """
-        except KeyboardInterrupt:
-            log.info("Keybord Interrupt")
-            break
-        """
+
+
         
     
-    iperf3_base.kill()
-    iperf3.kill()
+    #iperf3_base.kill()
+    #iperf3.kill()
     log.info("\nfinish")
 
 

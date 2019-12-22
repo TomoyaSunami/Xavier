@@ -121,13 +121,13 @@ def main():
     iperf3_base.start()
     """
     
-    time.sleep(2)
+    time.sleep(4)
     log.info("-------\n\nrunning\n\n------")
     #iperf3_base.kill()
     time.sleep(2)
-    executor.submit(control_iperf.start,"pid_naive_base.txt")
-    executor.submit(control_iperf.start,"pid_hmm_base.txt")
-    executor.submit(control_iperf.start,"pid_mode_base.txt")
+    executor.submit(control_iperf.start,"pid_naive_base.txt","192.168.0.3","5002","1")
+    executor.submit(control_iperf.start,"pid_hmm_base.txt","192.168.0.3","5003","1")
+    executor.submit(control_iperf.start,"pid_mode_base.txt","192.168.0.3","5004","1")
     while True:
 
         x = load("is_there_person.txt")
@@ -138,17 +138,17 @@ def main():
         mode_estimation = mode_estimate(x_array2)
         
         if x == 1:
-            executor.submit(control_iperf.start,"pid_naive.txt")
+            executor.submit(control_iperf.start,"pid_naive.txt","192.168.0.3","5002","10M")
         else :
             control_iperf.kill("pid_naive.txt")
         
         if hmm_estimation == 1:
-            executor.submit(control_iperf.start,"pid_hmm.txt")
+            executor.submit(control_iperf.start,"pid_hmm.txt","192.168.0.3","5003","10M")
         else :
             control_iperf.kill("pid_hmm.txt")
         
         if mode_estimation == 1:
-            executor.submit(control_iperf.start,"pid_mode.txt")
+            executor.submit(control_iperf.start,"pid_mode.txt","192.168.0.3","5004","10M")
         else :
             control_iperf.kill("pid_mode.txt")
     

@@ -125,7 +125,9 @@ def main():
     log.info("-------\n\nrunning\n\n------")
     #iperf3_base.kill()
     time.sleep(2)
-
+    executor.submit(control_iperf.start,"pid_naive_base.txt")
+    executor.submit(control_iperf.start,"pid_hmm_base.txt")
+    executor.submit(control_iperf.start,"pid_mode_base.txt")
     while True:
 
         x = load("is_there_person.txt")
@@ -134,33 +136,32 @@ def main():
 
         hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
         mode_estimation = mode_estimate(x_array2)
-        """
+        
         if x == 1:
-            iperf1.start()
+            executor.submit(control_iperf.start,"pid_naive.txt")
         else :
-            iperf1.kill()
-        """
-        """"
+            control_iperf.kill("pid_naive.txt")
+        
         if hmm_estimation == 1:
-            iperf2.start()
+            executor.submit(control_iperf.start,"pid_hmm.txt")
         else :
-            iperf2.kill()
-        """
+            control_iperf.kill("pid_hmm.txt")
         
         if mode_estimation == 1:
-            executor.submit(control_iperf.start,"pid.txt")
+            executor.submit(control_iperf.start,"pid_mode.txt")
         else :
-            control_iperf.kill("pid.txt")
+            control_iperf.kill("pid_mode.txt")
     
         #save_sequence(x, hmm_estimation, mode_estimation)
         with open("is_there_person.txt",'w') as f:
             f.write("")
-
-        
+   
     
     #iperf3_base.kill()
     #iperf3.kill()
-    control_iperf.kill("pid.txt")
+    control_iperf.kill("pid_naive_base.txt")
+    control_iperf.kill("pid_hmm_base.txt")
+    control_iperf.kill("pid_mode_base.txt")
     log.info("\nfinish")
 
 

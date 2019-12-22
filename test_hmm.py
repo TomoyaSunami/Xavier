@@ -78,14 +78,28 @@ def plot_graph(X1, X2, X3, X4, X5):
 
 def main():
     
-    train_binary_series = load_binary_series("train_detected_series.txt")
+    train_binary_series = load_binary_series("train_detected_series_easy.txt")
     model = hmm.MultinomialHMM(n_components=2,n_iter=10000)
     
     model.fit(train_binary_series)
+<<<<<<< HEAD
     #joblib.dump(model, "HMM.pkl")
     L, Z = model.decode(train_binary_series)
     plt.plot(Z)
     plt.show()
+=======
+    L,Z = model.decode(train_binary_series)
+    fig = plt.figure()
+    ax = plt.axes()
+    ax.set_yticks([0,1])
+    plt.plot(Z)
+    #ax.set_yticks([0, 1])
+    #ax.set_yticklabels(["1","0"])
+    plt.show()
+    print("finish")
+    joblib.dump(model, "HMM.pkl")
+
+>>>>>>> 7afdd1bfcb51749d1c60ff7738cb1b9c25261ec3
     
     test_binary_series = load_binary_series("test_detected_series.txt")
 
@@ -96,7 +110,7 @@ def main():
 
     prediction_list = load_binary_series("test_prediction_series.txt")
 
-    plot_graph(train_binary_series, train_prediction, test_binary_series, prediction, prediction_list)
+    #plot_graph(train_binary_series, train_prediction, test_binary_series, prediction, prediction_list)
 
     
 

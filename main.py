@@ -1,22 +1,25 @@
 #!/user/bin/env python3
 
-import controll_iperf as coni
+#import yolo
+#import communication_control
 import concurrent.futures
 import subprocess
+import time
 
-def allocate():
-    cmd = "python3 yolo_hmm.py"
+def yolo():
+    cmd = "python3 yolo.py"
     subprocess.call(cmd.split(" "))
 
+def communication_control():
+    cmd = "python3 communication_control.py"
+    subprocess.call(cmd.split(" "))
 
 def main():
-    print("main")
     executor = concurrent.futures.ProcessPoolExecutor(max_workers=2)
-    executor.submit(allocate)
+    executor.submit(yolo)
+    time.sleep(3)
+    executor.submit(communication_control)
     
-    executor.submit(coni.main)
-    
-
 
 if __name__=="__main__":
     main()

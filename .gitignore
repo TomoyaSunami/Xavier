@@ -19,3 +19,4 @@ test-*
 /__pycache__
 /xavier-env
 /.vscode
+/iperf3-python

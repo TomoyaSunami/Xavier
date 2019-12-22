@@ -475,11 +475,6 @@ def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
 
             # Do the detection
             detections = detect(netMain, metaMain, image, thresh)
-<<<<<<< HEAD
-            print(detections)
-=======
-
->>>>>>> 7afdd1bfcb51749d1c60ff7738cb1b9c25261ec3
             log.info(chr(27) + "[2J"+"**** " + str(len(detections)) + " Results ****")
             
             

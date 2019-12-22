@@ -5,8 +5,8 @@ import os
 def start(pid_txt,ip="192.168.0.3",port="5002",bandwidth="10M"):
     par_pid = os.getpid()
     #print("par_pid: {}".format(par_pid))
-    #cmd = "iperf -u -t 20 -c " + ip + "-p" + port + "-b" + bandwidth
-    cmd = "iperf -s -u"
+    cmd = "iperf -u -t 20 -c " + ip + " -p " + port + " -b " + bandwidth
+    #cmd = "iperf -s -u"
     proc = subprocess.Popen(cmd.split(" "))
     chi_pid = proc.pid
     #print("par_pid: {}, chi_pid: {}".format(par_pid,chi_pid))

@@ -9,7 +9,7 @@ from concurrent.futures import ProcessPoolExecutor
 
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
-
+"""
 class IPERF:
     def __init__(self,ip):
         self.ip = ip
@@ -40,7 +40,7 @@ class IPERF:
             
             self.state = "OFF"
             
-
+"""
 def load(path):
     x = ''
     while x == '':
@@ -88,12 +88,13 @@ def save_sequence(x, hmm_estimation, mode_estimation):
         f.write(str_w)
 
 def main():
+    mode_state = "OFF"
     executor = ProcessPoolExecutor(max_workers=6)
     x_array1 = np.empty([1,0],int)
     x_array2 = np.empty([1,0])
 
-    model = joblib.load("HMM_1215.pkl")
-    hmm_estimation = 0
+    #model = joblib.load("HMM_1215.pkl")
+    #hmm_estimation = 0
     """
     #iperf1_base = IPERF("192.168.0.3")
     #iperf1_base.set_port(5002)
@@ -123,20 +124,18 @@ def main():
     
     time.sleep(4)
     log.info("-------\n\nrunning\n\n------")
-    #iperf3_base.kill()
-    time.sleep(2)
-    executor.submit(control_iperf.start,"pid_naive_base.txt","192.168.0.3","5002","1")
-    executor.submit(control_iperf.start,"pid_hmm_base.txt","192.168.0.3","5003","1")
-    executor.submit(control_iperf.start,"pid_mode_base.txt","192.168.0.3","5004","1")
+    #executor.submit(control_iperf.start,"pid_naive_base.txt","192.168.0.3","5002","1")
+    #executor.submit(control_iperf.start,"pid_hmm_base.txt","192.168.0.3","5003","1")
+    #executor.submit(control_iperf.start,"pid_mode_base.txt","192.168.0.3","5004","1")
     while True:
 
         x = load("is_there_person.txt")
         x_array1 = stock(x_array1, x, 10)
         x_array2 = stock(x_array2, x, 10)
 
-        hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
+        #hmm_estimation = hmm_estimate(model, x_array1, hmm_estimation)
         mode_estimation = mode_estimate(x_array2)
-        
+        """
         if x == 1:
             executor.submit(control_iperf.start,"pid_naive.txt","192.168.0.3","5002","10M")
         else :
@@ -146,11 +145,13 @@ def main():
             executor.submit(control_iperf.start,"pid_hmm.txt","192.168.0.3","5003","10M")
         else :
             control_iperf.kill("pid_hmm.txt")
-        
-        if mode_estimation == 1:
+        """
+        if mode_estimation == 1 and mode_state=="OFF":
             executor.submit(control_iperf.start,"pid_mode.txt","192.168.0.3","5004","10M")
-        else :
+            mode_state="ON"
+        elif mode_estimation == 0 and mode_state=="ON":
             control_iperf.kill("pid_mode.txt")
+            mode_state="OFF"
     
         #save_sequence(x, hmm_estimation, mode_estimation)
         with open("is_there_person.txt",'w') as f:
@@ -159,9 +160,9 @@ def main():
     
     #iperf3_base.kill()
     #iperf3.kill()
-    control_iperf.kill("pid_naive_base.txt")
-    control_iperf.kill("pid_hmm_base.txt")
-    control_iperf.kill("pid_mode_base.txt")
+    #control_iperf.kill("pid_naive_base.txt")
+    #control_iperf.kill("pid_hmm_base.txt")
+    #control_iperf.kill("pid_mode_base.txt")
     log.info("\nfinish")
 
 

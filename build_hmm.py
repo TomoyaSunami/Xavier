@@ -62,7 +62,8 @@ def plot_graph(X1, X2):
 def main():
     
     output_sequence = load_sequence("output_sequence.txt")
-    model = hmm.MultinomialHMM(n_components=2,n_iter=10000)
+    #model = hmm.MultinomialHMM(n_components=2,n_iter=10000)
+    model = hmm.GaussianHMM(n_components=2,n_iter=10000)
     
     model.fit(output_sequence.reshape(len(output_sequence),1))
     joblib.dump(model, "HMM.pkl")

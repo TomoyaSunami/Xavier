@@ -30,7 +30,7 @@ def plot_graph(paths):
     for path, ax in zip(paths, axes):
         x = load_sequence(path)
         ax.plot(range(len(x)),x)
-        ax.set_yticks([0,1])
+        #ax.set_yticks([0,1])
         ax.set_xlabel("Index")
         plt.subplots_adjust(hspace=hspace)
     plt.show()

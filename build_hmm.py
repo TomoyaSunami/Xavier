@@ -2,15 +2,20 @@
 """
 load the result of object detection and build hmm
 """
-
+import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 from hmmlearn import hmm
 import joblib
+import correction
 
+def execute_cmdline():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input', type=str)
+    args = parser.parse_args()
+    main(args.input)
 
 def load_sequence(path):
-
     with open(path) as f:
         l_strip = [s.strip() for s in f.readlines()]
     x = [int(s) for s in l_strip]
@@ -42,46 +47,50 @@ def hmm_estimate(model, observed_sequence, pre_estimation):
 
     return estimation
 
-def plot_graph(X1, X2):
-    plt.subplot(2,1,1)
+def plot_graph(X1, X2, X3):
+    plt.subplot(3,1,1)
     plt.subplots_adjust(hspace=1)
     plt.plot(X1)
-    #plt.title("train observed sequence")
+    plt.title("observed sequence")
     plt.xlabel('Index')
     plt.yticks((0,1))
     
-    plt.subplot(2,1,2)
+    plt.subplot(3,1,2)
     plt.subplots_adjust(hspace=1)
     plt.plot(X2)
-    #plt.title("train estimated state")
+    plt.title("estimated state sequence (window=all)")
     plt.xlabel('Index')
     plt.yticks((0,1))
-
+    
+    plt.subplot(3,1,3)
+    plt.subplots_adjust(hspace=1)
+    plt.plot(X3)
+    plt.title("estimated state sequence (window=10)")
+    plt.xlabel('Index')
+    plt.yticks((0,1))
     plt.show()
 
-def main():
+def main(path):
     
-    output_sequence = load_sequence("output_sequence.txt")
-    #model = hmm.MultinomialHMM(n_components=2,n_iter=10000)
-    model = hmm.GaussianHMM(n_components=2,n_iter=10000)
-    
-    model.fit(output_sequence.reshape(len(output_sequence),1))
-    joblib.dump(model, "HMM.pkl")
+    time, confidence = correction.load_sequence(path)
+    confidence = correction.avg_correction(confidence,3,0.01)
+    model = hmm.MultinomialHMM(n_components=2,n_iter=10000)
+    model.fit(confidence.reshape(len(confidence),1))
+    joblib.dump(model, "test-HMM.pkl")
+    z = model.predict(confidence.reshape(len(confidence),1))
 
     x_array = np.empty([1,0],int)
     hmm_estimation = 0
     estimated_state = []
-    for x in output_sequence:
-        x_array = stock(x_array, x, 10)
+    for x in confidence:
+        x_array = stock(x_array, x, 700)
         
-
         hmm_estimation = hmm_estimate(model, x_array, hmm_estimation)
         estimated_state.append(hmm_estimation)
 
-    plot_graph(output_sequence, estimated_state)
+    plot_graph(confidence,z,estimated_state)
 
     
 
-if __name__ == "__main__":
-    main()
-
+if __name__=="__main__":
+    execute_cmdline()

@@ -1,11 +1,19 @@
-import allocate_bandwidth_with_yolo as alb
-import subprocess
-def allocate():
-    cmd = "python3 allocate_bandwidth_with_yolo.py"
-    subprocess.call(cmd.split())
+import argparse
+import os
+import sys
+import numpy as np
+import matplotlib.pyplot as plt
 
-def main():
-    allocate()
+def execute_cmdline():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input', nargs='+', type=str)
+    args = parser.parse_args()
+    print(args.input)
+    main(args.input)
+
+def main(input):
+    
+
 
 
 if __name__=="__main__":

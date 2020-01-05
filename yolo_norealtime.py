@@ -459,6 +459,7 @@ def loaunch_yolo_env(config_path, weight_path, meta_path, thresh, svo_path, zed_
 
 def main(cam, runtime, mat, point_cloud_mat, thresh, color_array):
     log.info("Running...")
+    time.sleep(1)
 
     key = ''
     while key != 113:  # for 'q' key

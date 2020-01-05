@@ -19,7 +19,7 @@ def execute_cmdline(argv):
     input_path = "output"
     output_name = "video"
 
-    help_str = 'make_output_video.py -f <fps> -i <input_path> -o <output_name>'
+    help_str = 'generate_video.py -f <fps> -i <input_path> -o <output_name>'
     try:
         opts, args = getopt.getopt(argv, 'f:i:o:', ['fps=', 'input=', 'output='])
     except getopt.GetoptError as err:
